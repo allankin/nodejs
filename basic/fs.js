@@ -1,0 +1,66 @@
+var fs = require('fs');
+fs.readFile('./foo.js',function(err,data){
+	//console.log(data.toString());
+});
+var data = fs.readFileSync('./foo.js');
+console.log(data.toString());
+
+
+fs.readFile('./t.js',{'encoding':'utf8','flag':'w+'},function(err,data){
+	//console.log(data);
+});
+
+
+fs.stat('./foo.js',function(err,stats){
+	console.log(stats);
+})
+
+var file = fs.createReadStream('./foo.js');
+file.pause();
+file.on('open',function(fd){
+	console.log('open file .... ');
+});
+file.on('data',function(data){
+	console.log('read file:');
+	console.log(data);
+});
+file.on('end',function(){
+	console.log('file read end...');
+});
+file.on('close',function(){
+	console.log('file closed...');
+});
+file.on('error',function(err){
+	console.log(err);
+});
+setTimeout(function(){
+	file.resume();
+},2000);
+
+
+var readStreamFile = fs.createReadStream('./file/test.txt');
+var copyFile = fs.createWriteStream('./file/test_copy.txt');
+readStreamFile.on('data',function(data){
+	copyFile.write(data);
+});
+readStreamFile.on('end',function(){
+	copyFile.end('writestream close...',function(){
+		console.log("total write bytes: ",copyFile.bytesWritten);
+	});
+});
+copyFile.on('close',function(){
+	console.log('copyFile close......');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
